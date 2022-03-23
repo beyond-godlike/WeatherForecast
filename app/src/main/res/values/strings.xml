@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">WeatherForecast</string>
+    <string name="APIKEY">72145f7d201a432c92a180346212112</string>
+    <string name="tv_city">City </string>
+    <string name="bt_forecast">forecast</string>
+    <string name="ok">ok</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+</resources>
