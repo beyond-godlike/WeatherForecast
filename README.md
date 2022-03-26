@@ -7,5 +7,5 @@
 
 ###### Weather forecast
 
-![future](https://sun9-21.userapi.com/impf/hlmJIoE-gJwU2XZuVDiXLADB4qtfxRoY9OCHNw/9GZ_Ty6anA4.jpg?size=1024x600&quality=96&sign=99121759808773dcaf64be9545b0e6e1&type=album)
+![future](https://sun9-42.userapi.com/impf/KHvCIWtqxFYtdFGOBSf7mHNF8uEMh2NLluvqeA/2PyQUWzBxcI.jpg?size=1024x600&quality=96&sign=aa2250b9bc110ef64bd48f1094c591d7&type=album)
 
