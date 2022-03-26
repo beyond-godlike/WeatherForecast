@@ -7,19 +7,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import com.unava.dia.weatherforecast.R
 import com.unava.dia.weatherforecast.data.model.future.Forecastday
 import com.unava.dia.weatherforecast.utils.DayDiffUtil
 import com.unava.dia.weatherforecast.utils.GlideUtil
+import kotlin.math.abs
 
-class MounthAdapter(private val response: MutableList<Forecastday>)  :
-    RecyclerView.Adapter<MounthAdapter.CustomViewHolder>(){
+
+class MounthAdapter(private val response: MutableList<Forecastday>) :
+    RecyclerView.Adapter<MounthAdapter.CustomViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.mounth_item, parent, false)
-        view.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
+        view.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,
+            RecyclerView.LayoutParams.WRAP_CONTENT)
         return CustomViewHolder(view)
     }
 
@@ -34,16 +37,34 @@ class MounthAdapter(private val response: MutableList<Forecastday>)  :
 
         holder.day.text = "${day.day?.maxtemp_c.toString()}°C"
         holder.night.text = "${day.day?.mintemp_c.toString()}°C"
+        //holder.night.text = "${day.day?.avgtemp_c.toString()}°C"
 
-        val avg: Int = day.day?.avgtemp_c?.toInt()!!
+        val avg: Float = day.day?.avgtemp_c?.toFloat()!!
 
-        when {
-            avg < 0 -> holder.lMounth.setBackgroundColor(Color.parseColor("#edfaff"))
-            avg == 0 -> holder.lMounth.setBackgroundColor(Color.parseColor("#f1fbff"))
-            avg in 1..6 -> holder.lMounth.setBackgroundColor(Color.parseColor("#f9fdff"))
-            avg in 8..9 -> holder.lMounth.setBackgroundColor(Color.parseColor("#f8fdf4"))
-            avg in 11..13 -> holder.lMounth.setBackgroundColor(Color.parseColor("#f1fbe6"))
-        }
+        holder.mc.setBackgroundColor(countRGB(avg))
+        holder.mc.strokeColor = countRGBStroke(avg)
+    }
+
+    private fun fib(n: Int): Int {
+        return if (n <= 1) n else fib(n - 1) + fib(n - 2)
+    }
+
+    private fun countRGBStroke(avg: Float): Int {
+        val hsv = FloatArray(3)
+        hsv[0] = 359.0f - (200.0f + (fib(avg.toInt()) / 100.0f ))
+        hsv[1] = abs(avg) / 100
+        hsv[2] = 0.8f
+
+        return Color.HSVToColor(hsv)
+    }
+
+    private fun countRGB(avg: Float): Int {
+        val hsv = FloatArray(3)
+        hsv[0] = 359.0f - (200.0f + (fib(avg.toInt()) / 100.0f ))
+        hsv[1] = abs(avg) / 100
+        hsv[2] = 1.0f
+
+        return Color.HSVToColor(hsv)
     }
 
     override fun getItemCount(): Int {
@@ -67,7 +88,6 @@ class MounthAdapter(private val response: MutableList<Forecastday>)  :
         val ivCondition: ImageView = itemView.findViewById(R.id.ivCond)
         val day: TextView = itemView.findViewById(R.id.tvDayTemp)
         val night: TextView = itemView.findViewById(R.id.tvNightTemp)
-        val lMounth: LinearLayoutCompat = itemView.findViewById(R.id.lMounth)
-
+        val mc: MaterialCardView = itemView.findViewById(R.id.materialCard)
     }
 }
