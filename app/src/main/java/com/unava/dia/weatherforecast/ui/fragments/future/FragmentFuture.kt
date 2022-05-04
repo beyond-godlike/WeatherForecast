@@ -1,7 +1,9 @@
 package com.unava.dia.weatherforecast.ui.fragments.future
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +36,7 @@ class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
         this.setupRecyclerView()
         this.bindViewModel()
     }
+
 
     private fun getForecast() {
         viewModel.getFutureWeather(city, 7)
