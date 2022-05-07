@@ -2,6 +2,7 @@ package com.unava.dia.weatherforecast.ui.fragments.future
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,8 +42,8 @@ class MounthAdapter(private val response: MutableList<Forecastday>) :
 
         val avg: Float = day.day?.avgtemp_c?.toFloat()!!
 
-        holder.mc.setBackgroundColor(countRGB(avg))
         holder.mc.strokeColor = countRGBStroke(avg)
+        holder.mc.setCardBackgroundColor(countRGB(avg))
     }
 
     private fun fib(n: Int): Int {

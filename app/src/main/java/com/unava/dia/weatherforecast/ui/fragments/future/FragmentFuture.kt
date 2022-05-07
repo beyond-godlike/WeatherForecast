@@ -50,12 +50,12 @@ class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
 
 
     override fun observeViewModel() {
-        viewModel.error.observe(viewLifecycleOwner, {
+        viewModel.error.observe(viewLifecycleOwner) {
             showError(it, requireContext())
-        })
-        viewModel.futureWeather.observe(viewLifecycleOwner, {
+        }
+        viewModel.futureWeather.observe(viewLifecycleOwner) {
             updateView(it)
-        })
+        }
     }
 
     override fun initUi() {
