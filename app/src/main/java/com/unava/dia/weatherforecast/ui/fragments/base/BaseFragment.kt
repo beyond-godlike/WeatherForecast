@@ -35,24 +35,14 @@ abstract class BaseFragment(private val cf: Int) : Fragment() {
         return shared.getString(Constants.CITY, "London" ).toString()
     }
 
-    fun getCurrentIdFromShared() : Long {
-        shared = requireActivity().getSharedPreferences(Constants.ID_CURRENT, Context.MODE_PRIVATE)
-        return shared.getLong(Constants.ID_CURRENT, 0L)
+    fun getIdFromShared() : Long {
+        shared = requireActivity().getSharedPreferences(Constants.ID_WEATHER, Context.MODE_PRIVATE)
+        return shared.getLong(Constants.ID_WEATHER, 0L)
     }
 
-    fun getFutureIdFromShared() : Long {
-        shared = requireActivity().getSharedPreferences(Constants.ID_FORECAST, Context.MODE_PRIVATE)
-        return shared.getLong(Constants.ID_FORECAST, 0L)
-    }
-
-    fun saveForecastToShared(id: Long){
-        shared = requireActivity().getSharedPreferences(Constants.ID_FORECAST, Context.MODE_PRIVATE)
-        shared.edit().putLong(Constants.ID_FORECAST, id).apply()
-    }
-
-    fun saveCurrentToShared(id: Long){
-        shared = requireActivity().getSharedPreferences(Constants.ID_CURRENT, Context.MODE_PRIVATE)
-        shared.edit().putLong(Constants.ID_CURRENT, id).apply()
+    fun saveIdToShared(id: Long){
+        shared = requireActivity().getSharedPreferences(Constants.ID_WEATHER, Context.MODE_PRIVATE)
+        shared.edit().putLong(Constants.ID_WEATHER, id).apply()
     }
 
     fun saveCountryToShared(country: String) {

@@ -1,34 +1,35 @@
 package com.unava.dia.weatherforecast.ui.fragments.future
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.unava.dia.weatherforecast.R
 import com.unava.dia.weatherforecast.data.model.future.FutureWeatherResponse
 import com.unava.dia.weatherforecast.ui.fragments.base.BaseFragment
+import com.unava.dia.weatherforecast.ui.fragments.base.SharedViewModel
 import com.unava.dia.weatherforecast.utils.MarginItemDecoration
+import com.unava.dia.weatherforecast.utils.obtainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
 
-    private lateinit var viewModel: FragmentFutureViewModel
+    private val viewModel: SharedViewModel by lazy {
+        obtainViewModel(requireActivity(),
+            SharedViewModel::class.java,
+            defaultViewModelProviderFactory)
+    }
 
     private var city: String = "London"
 
     private var rvMonth: RecyclerView? = null
     private var adapter: MounthAdapter? = null
 
-    companion object {
-        fun newInstance() = FragmentFuture()
-    }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         city = getCityFromShared()
         if (city == "") city = "London"
 
@@ -37,14 +38,8 @@ class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
         this.bindViewModel()
     }
 
-
-    private fun getForecast() {
-        viewModel.getFutureWeather(city, 7)
-    }
-
     override fun bindViewModel() {
-        viewModel = ViewModelProvider(this)[FragmentFutureViewModel::class.java]
-        this.getForecast()
+        viewModel.getFutureWeather(city, 7)
         this.observeViewModel()
     }
 

@@ -2,18 +2,20 @@ package com.unava.dia.weatherforecast.ui.fragments.current
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.unava.dia.weatherforecast.R
 import com.unava.dia.weatherforecast.data.model.curernt.CurrentWeatherResponse
 import com.unava.dia.weatherforecast.ui.fragments.base.BaseFragment
+import com.unava.dia.weatherforecast.ui.fragments.base.SharedViewModel
 import com.unava.dia.weatherforecast.utils.GlideUtil
+import com.unava.dia.weatherforecast.utils.obtainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,18 +31,18 @@ class FragmentCurrent : BaseFragment(R.layout.fragment_current_fragment) {
     private var etCity: EditText? = null
     private var swTheme: SwitchMaterial? = null
 
-    companion object {
-        fun newInstance() = FragmentCurrent()
+    private val viewModel: SharedViewModel by lazy {
+        obtainViewModel(requireActivity(),
+            SharedViewModel::class.java,
+            defaultViewModelProviderFactory)
     }
 
-    private lateinit var viewModel: CurrentViewModel
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         this.initUi()
         this.bindViewModel()
-        this.viewModel.setId(getCurrentIdFromShared())
+        this.viewModel.setId(getIdFromShared())
         this.getWeather(ct)
     }
 
@@ -63,7 +65,9 @@ class FragmentCurrent : BaseFragment(R.layout.fragment_current_fragment) {
 
         btOk?.setOnClickListener {
             getWeather(etCity?.text.toString())
+            ct = etCity?.text.toString()
             saveCountryToShared(etCity?.text.toString())
+            viewModel.getFutureWeather(ct, 7)
         }
         swTheme?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -78,20 +82,19 @@ class FragmentCurrent : BaseFragment(R.layout.fragment_current_fragment) {
     }
 
     override fun bindViewModel() {
-        viewModel = ViewModelProvider(this)[CurrentViewModel::class.java]
         this.observeViewModel()
     }
 
     override fun observeViewModel() {
-        viewModel.error.observe(viewLifecycleOwner, {
+        viewModel.error.observe(viewLifecycleOwner) {
             showError(it, requireContext())
-        })
-        viewModel.currentWeather.observe(viewLifecycleOwner, {
+        }
+        viewModel.currentWeather.observe(viewLifecycleOwner) {
             updateView(it)
-        })
-        viewModel.idMutable.observe(viewLifecycleOwner, {
-            saveCurrentToShared(it)
-        })
+        }
+        viewModel.idMutable.observe(viewLifecycleOwner) {
+            saveIdToShared(it)
+        }
     }
 
     @SuppressLint("SetTextI18n")
