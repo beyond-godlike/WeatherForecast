@@ -48,15 +48,15 @@ class SharedViewModel @Inject constructor(
                         currentWeather.postValue(data!!)
                         idMutable.postValue(repository.insertCurrentWeather(data!!))
                     } else {
-                        //error.postValue("Code404")
+                        error.postValue("Code404")
                         currentWeather.postValue(id?.let { repository.getCurrentWeather(it) })
                     }
                 } else {
                     error.postValue(response.errorBody().toString())
-                    //currentWeather.postValue(id?.let { repository.getCurrentWeather(it) })
+                    currentWeather.postValue(id?.let { repository.getCurrentWeather(it) })
                 }
             } catch (e: Exception) {
-                //error.postValue(e.localizedMessage)
+                error.postValue(e.localizedMessage)
                 currentWeather.postValue(id?.let { repository.getCurrentWeather(it) })
             }
         }

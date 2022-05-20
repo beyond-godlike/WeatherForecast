@@ -64,9 +64,9 @@ class FragmentCurrent : BaseFragment(R.layout.fragment_current_fragment) {
         if (ct == "") ct = "London"
 
         btOk?.setOnClickListener {
-            getWeather(etCity?.text.toString())
             ct = etCity?.text.toString()
-            saveCountryToShared(etCity?.text.toString())
+            getWeather(ct)
+            saveCountryToShared(ct)
             viewModel.getFutureWeather(ct, 7)
         }
         swTheme?.setOnCheckedChangeListener { _, isChecked ->
