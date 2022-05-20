@@ -85,3 +85,4 @@ class SharedViewModel @Inject constructor(
             }
         }
     }
+}
