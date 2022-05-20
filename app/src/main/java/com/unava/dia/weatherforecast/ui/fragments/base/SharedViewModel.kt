@@ -46,7 +46,7 @@ class SharedViewModel @Inject constructor(
                     val data = response.body()
                     if (data != null) {
                         currentWeather.postValue(data!!)
-                        saveToDb(data!!)
+                        idMutable.postValue(repository.insertCurrentWeather(data!!))
                     } else {
                         //error.postValue("Code404")
                         currentWeather.postValue(id?.let { repository.getCurrentWeather(it) })
@@ -70,7 +70,7 @@ class SharedViewModel @Inject constructor(
                     val data = response.body()
                     if (data != null) {
                         futureWeather.postValue(data!!)
-                        saveToDb(data)
+                        idMutable.postValue(repository.insertFutureWeather(data!!))
                     } else {
                         error.postValue("Code404")
                         //futureWeather.postValue(id?.let { repository.getFutureWeather(it) })
@@ -85,23 +85,3 @@ class SharedViewModel @Inject constructor(
             }
         }
     }
-
-    /*
-    private fun <T : Weather> saveToDb (w : T) {
-        scope.launch {
-            idMutable.postValue(repository.insertWeather(w))
-        }
-    }
-    */
-    private fun saveToDb(weather: CurrentWeatherResponse) {
-        scope.launch {
-            idMutable.postValue(repository.insertCurrentWeather(weather))
-        }
-    }
-
-    private fun saveToDb(weather: FutureWeatherResponse) {
-        scope.launch {
-            idMutable.postValue(repository.insertFutureWeather(weather))
-        }
-    }
-}
