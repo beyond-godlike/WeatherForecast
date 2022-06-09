@@ -8,6 +8,7 @@ import com.unava.dia.weatherforecast.R
 import com.unava.dia.weatherforecast.data.model.future.FutureWeatherResponse
 import com.unava.dia.weatherforecast.ui.fragments.base.BaseFragment
 import com.unava.dia.weatherforecast.ui.fragments.base.SharedViewModel
+import com.unava.dia.weatherforecast.utils.Constants.CITY_DEFAULT
 import com.unava.dia.weatherforecast.utils.MarginItemDecoration
 import com.unava.dia.weatherforecast.utils.obtainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +22,7 @@ class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
             defaultViewModelProviderFactory)
     }
 
-    private var city: String = "London"
+    private var city: String = CITY_DEFAULT
 
     private var rvMonth: RecyclerView? = null
     private var adapter: MounthAdapter? = null
@@ -30,16 +31,13 @@ class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        city = getCityFromShared()
-        if (city == "") city = "London"
-
         this.initUi()
         this.setupRecyclerView()
         this.bindViewModel()
     }
 
     override fun bindViewModel() {
-        viewModel.getFutureWeather(city, 7)
+        viewModel.getFutureWeather(shared.getCity(), 7)
         this.observeViewModel()
     }
 
@@ -49,14 +47,16 @@ class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
             showError(it, requireContext())
         }
         viewModel.futureWeather.observe(viewLifecycleOwner) {
-            updateView(it)
+            if (it != null) {
+                updateView(it)
+            }
         }
     }
 
     override fun initUi() {
         rvMonth = requireActivity().findViewById(R.id.rvMonth)
-        city = getCityFromShared()
-        if (city == "") city = "London"
+        city = shared.getCity()
+        if (city == "") city = CITY_DEFAULT
     }
 
     private fun setupRecyclerView() {

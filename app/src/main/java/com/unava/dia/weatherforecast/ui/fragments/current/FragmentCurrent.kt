@@ -14,6 +14,7 @@ import com.unava.dia.weatherforecast.R
 import com.unava.dia.weatherforecast.data.model.curernt.CurrentWeatherResponse
 import com.unava.dia.weatherforecast.ui.fragments.base.BaseFragment
 import com.unava.dia.weatherforecast.ui.fragments.base.SharedViewModel
+import com.unava.dia.weatherforecast.utils.Constants.CITY_DEFAULT
 import com.unava.dia.weatherforecast.utils.GlideUtil
 import com.unava.dia.weatherforecast.utils.obtainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,13 +43,8 @@ class FragmentCurrent : BaseFragment(R.layout.fragment_current_fragment) {
 
         this.initUi()
         this.bindViewModel()
-        this.viewModel.setId(getIdFromShared())
-        this.getWeather(ct)
-    }
-
-
-    private fun getWeather(city: String) {
-        viewModel.getCurrentWeather(city)
+        this.viewModel.setId(shared.getId())
+        this.viewModel.getCurrentWeather(shared.getCity())
     }
 
     override fun initUi() {
@@ -60,13 +56,13 @@ class FragmentCurrent : BaseFragment(R.layout.fragment_current_fragment) {
         etCity = requireActivity().findViewById(R.id.etCity)
         swTheme = requireActivity().findViewById(R.id.swTheme)
 
-        ct = getCityFromShared()
-        if (ct == "") ct = "London"
+        ct = shared.getCity()
+        if (ct == "") ct = CITY_DEFAULT
 
         btOk?.setOnClickListener {
             ct = etCity?.text.toString()
-            getWeather(ct)
-            saveCountryToShared(ct)
+            shared.saveCity(ct)
+            viewModel.getCurrentWeather(ct)
             viewModel.getFutureWeather(ct, 7)
         }
         swTheme?.setOnCheckedChangeListener { _, isChecked ->
@@ -90,10 +86,11 @@ class FragmentCurrent : BaseFragment(R.layout.fragment_current_fragment) {
             showError(it, requireContext())
         }
         viewModel.currentWeather.observe(viewLifecycleOwner) {
-            updateView(it)
-        }
-        viewModel.idMutable.observe(viewLifecycleOwner) {
-            saveIdToShared(it)
+            if (it != null) {
+                updateView(it)
+            } else {
+                showError("weather is null", requireContext())
+            }
         }
     }
 
