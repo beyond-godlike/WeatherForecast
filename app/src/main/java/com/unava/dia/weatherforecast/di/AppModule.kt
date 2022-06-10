@@ -3,7 +3,6 @@ package com.unava.dia.weatherforecast.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
-import com.unava.dia.weatherforecast.data.Communicator
 import com.unava.dia.weatherforecast.data.WeatherSharedPreferences
 import com.unava.dia.weatherforecast.data.api.ApiInterface
 import com.unava.dia.weatherforecast.data.api.AppDatabase
@@ -60,13 +59,4 @@ object AppModule {
     @Provides
     fun provideWeatherShared(@ApplicationContext app: Context) = WeatherSharedPreferences(app)
 
-    @Provides
-    fun provideCommunicator(
-        api: ApiInterface,
-        repository: WeatherRepository,
-        @Named("default")
-        dispatcher: CoroutineDispatcher,
-        shared: WeatherSharedPreferences,
-    ) =
-        Communicator(api, repository, dispatcher, shared)
 }

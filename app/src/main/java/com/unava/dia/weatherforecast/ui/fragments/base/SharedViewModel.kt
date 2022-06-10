@@ -7,6 +7,8 @@ import com.unava.dia.weatherforecast.data.api.ApiInterface
 import com.unava.dia.weatherforecast.data.model.curernt.CurrentWeatherResponse
 import com.unava.dia.weatherforecast.data.model.future.FutureWeatherResponse
 import com.unava.dia.weatherforecast.data.repository.WeatherRepository
+import com.unava.dia.weatherforecast.domain.useCases.GetCurrentWeatherUseCase
+import com.unava.dia.weatherforecast.domain.useCases.GetFutureWeatherUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +23,8 @@ class SharedViewModel @Inject constructor(
     private val repository: WeatherRepository,
     @Named("default")
     private val dispatcher: CoroutineDispatcher,
-    private val api: ApiInterface,
+    private val currentWeatherUseCase: GetCurrentWeatherUseCase,
+    private val futureWeatherUseCase: GetFutureWeatherUseCase,
 ) : ViewModel(), LifecycleObserver {
 
     var error: MutableLiveData<String> = MutableLiveData()
@@ -42,7 +45,7 @@ class SharedViewModel @Inject constructor(
     fun getCurrentWeather(country: String) {
         scope.launch {
             try {
-                val response = api.getCurrentWeatherAsync(country)
+                val response = currentWeatherUseCase.getCurrentWeatherAsync(country)
                 if (response.isSuccessful) {
                     val data = response.body()
                     if (data != null) {
@@ -63,7 +66,7 @@ class SharedViewModel @Inject constructor(
     fun getFutureWeather(country: String, days: Int) {
         scope.launch {
             try {
-                val response = api.getFutureWeatherAsync(country, days)
+                val response = futureWeatherUseCase.getFutureWeatherAsync(country, days)
                 if (response.isSuccessful) {
                     val data = response.body()
                     if (data != null) {
