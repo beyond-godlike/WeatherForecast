@@ -7,13 +7,16 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object UseCasesModule {
     @Provides
+    @Singleton
     fun provideGetCurrentWeatherUseCase(api: ApiInterface) = GetCurrentWeatherUseCase(api)
 
+    @Singleton
     @Provides
     fun provideGetFutureWeatherUseCase(api: ApiInterface) = GetFutureWeatherUseCase(api)
 }

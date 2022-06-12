@@ -17,14 +17,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
-import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
     @Provides
+    @Singleton
     fun provideAppDatabase(
         @ApplicationContext app: Context,
     ) = Room.databaseBuilder(
@@ -35,12 +35,15 @@ object AppModule {
         .build()
 
     @Provides
+    @Singleton
     fun provideCurrentWeatherDao(db: AppDatabase) = db.currentWeatherDao()
 
     @Provides
+    @Singleton
     fun provideFutureWeatherDao(db: AppDatabase) = db.futureWeatherDao()
 
     @Provides
+    @Singleton
     fun provideRepository(
         currentWeatherDao: CurrentWeatherResponseDao,
         futureWeatherDao: FutureWeatherResponseDao,
@@ -48,6 +51,7 @@ object AppModule {
         WeatherRepository(currentWeatherDao, futureWeatherDao)
 
     @Provides
+    @Singleton
     fun provideApi(): ApiInterface = RetrofitFactory.api()
 
     @Provides
@@ -57,6 +61,7 @@ object AppModule {
         )
 
     @Provides
+    @Singleton
     fun provideWeatherShared(@ApplicationContext app: Context) = WeatherSharedPreferences(app)
 
 }

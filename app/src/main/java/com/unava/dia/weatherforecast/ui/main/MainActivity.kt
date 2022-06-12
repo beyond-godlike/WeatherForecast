@@ -1,18 +1,16 @@
 package com.unava.dia.weatherforecast.ui.main
 
-import android.app.ActivityManager
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.google.android.material.tabs.TabLayout
 import com.unava.dia.weatherforecast.R
-import com.unava.dia.weatherforecast.utils.UpdateService
+import com.unava.dia.weatherforecast.utils.WeatherWorker
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 @AndroidEntryPoint
@@ -22,33 +20,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-		setTheme(R.style.Theme_WeatherForecast)
+        setTheme(R.style.Theme_WeatherForecast)
         setContentView(R.layout.activity_main)
         initUi()
-        initService()
-    }
-    private fun initService() {
-        if(!isServiceRunning<UpdateService>()) {
-            val calendar: Calendar = Calendar.getInstance()
-            calendar.add(Calendar.SECOND, 10)
-
-            val intent = Intent(this, UpdateService::class.java)
-            val pintent = PendingIntent.getService(this, 0, intent, 0)
-            val alarm = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-            //for 60 mint 60*60*1000
-            alarm.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, 60*60*1000, pintent)
-
-            startService(intent)
-        }
+        startWorkManager()
     }
 
-    @Suppress("DEPRECATION") // Deprecated for third party Services.
-    inline fun <reified T> Context.isServiceRunning() =
-        (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
-            .getRunningServices(Integer.MAX_VALUE)
-            .any { it.service.className == T::class.java.name }
-
+    private fun startWorkManager() {
+        val wm = WorkManager.getInstance(this)
+        wm.enqueueUniquePeriodicWork(
+            "updateWeather",
+            ExistingPeriodicWorkPolicy.REPLACE,
+            PeriodicWorkRequest
+                .Builder(WeatherWorker::class.java, 30L, TimeUnit.MINUTES)
+                .build())
+    }
 
     private fun initUi() {
         tabLayout = findViewById(R.id.tabLayout)
@@ -66,6 +52,7 @@ class MainActivity : AppCompatActivity() {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 viewPager.currentItem = tab.position
             }
+
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })

@@ -1,60 +1,40 @@
 package com.unava.dia.weatherforecast.utils
 
-import android.app.Service
-import android.content.Intent
-import android.os.IBinder
-import android.widget.Toast
+import android.content.Context
+import androidx.hilt.work.HiltWorker
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.unava.dia.weatherforecast.data.WeatherSharedPreferences
 import com.unava.dia.weatherforecast.data.repository.WeatherRepository
 import com.unava.dia.weatherforecast.domain.useCases.GetCurrentWeatherUseCase
 import com.unava.dia.weatherforecast.domain.useCases.GetFutureWeatherUseCase
-import dagger.hilt.android.AndroidEntryPoint
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import javax.inject.Named
 
-
-@AndroidEntryPoint
-class UpdateService : Service() {
-    @Inject
-    lateinit var currentUseCase: GetCurrentWeatherUseCase
-
-    @Inject
-    lateinit var futureUseCase: GetFutureWeatherUseCase
-
-    @Inject
-    lateinit var shared: WeatherSharedPreferences
-
-    @Inject
+@HiltWorker
+class WeatherWorker @AssistedInject constructor(
+    @Assisted val context: Context,
+    @Assisted params: WorkerParameters,
+    private val currentUseCase: GetCurrentWeatherUseCase,
+    private val futureUseCase: GetFutureWeatherUseCase,
+    private val shared: WeatherSharedPreferences,
     @Named("default")
-    lateinit var dispatcher: CoroutineDispatcher
-
-    @Inject
-    lateinit var repository: WeatherRepository
+    val dispatcher: CoroutineDispatcher,
+    private val repository: WeatherRepository,
+) : Worker(context, params) {
 
     private var id: Long? = null
     private var city: String = Constants.CITY_DEFAULT
 
-    override fun onBind(intent: Intent?): IBinder? {
-        throw UnsupportedOperationException("Not yet implemented")
-    }
-
-    override fun onCreate() {
-        Toast.makeText(applicationContext, "Service Created", Toast.LENGTH_SHORT).show()
-
-        super.onCreate()
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Toast.makeText(applicationContext, "Service Running ", Toast.LENGTH_SHORT).show()
-
+    override fun doWork(): Result {
         initData()
         getCurrentWeather()
         getFutureWeather()
-
-        return super.onStartCommand(intent, flags, startId)
+        return Result.success()
     }
 
     private fun initData() {
@@ -74,7 +54,6 @@ class UpdateService : Service() {
                     }
                 }
             } catch (e: Exception) {
-                Toast.makeText(applicationContext, e.localizedMessage, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -94,4 +73,5 @@ class UpdateService : Service() {
             }
         }
     }
+
 }
