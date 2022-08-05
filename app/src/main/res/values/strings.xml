@@ -7,4 +7,9 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
+    <string name="tv_temp">29°C</string>
+    <string name="tv_date">Thu, March 25 10:10 am</string>
+    <string name="tv_condition">rain</string>
+    <string name="tv_temp_min_max">30°/22°</string>
+    <string name="tv_feels_like">Feels like 32°</string>
 </resources>

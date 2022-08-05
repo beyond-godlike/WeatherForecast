@@ -7,6 +7,6 @@ data class Location(
     var lat: Double? = null,
     var lon: Double? = null,
     var tz_id: String? = null,
-    var localtime_epoch: Double? = null,
+    var localtime_epoch: Long? = null,
     var localtime: String? = null,
 )

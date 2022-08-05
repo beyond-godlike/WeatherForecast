@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         viewPager = findViewById(R.id.viewPager)
         tabLayout.addTab(tabLayout.newTab().setText("Current"))
         tabLayout.addTab(tabLayout.newTab().setText("Forecast"))
+        tabLayout.addTab(tabLayout.newTab().setText("Hourly"))
 
         tabLayout.tabGravity = TabLayout.GRAVITY_FILL
 

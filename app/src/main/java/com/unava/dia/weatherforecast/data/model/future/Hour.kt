@@ -1,7 +1,7 @@
 package com.unava.dia.weatherforecast.data.model.future
 
 data class Hour (
-    var time_epoch : Double? = null,
+    var time_epoch : Long? = null,
     var time : String? = null,
     var temp_c : Double? = null,
     var temp_f : Double? = null,
