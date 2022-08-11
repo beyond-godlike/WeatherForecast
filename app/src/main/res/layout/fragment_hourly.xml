@@ -60,15 +60,14 @@
                     tools:srcCompat="@tools:sample/avatars"
                     />
                 <TextView
-                    android:id="@+id/tvTemp"
+                    android:id="@+id/tvTempH"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:typeface="serif"
                     android:textColor="@color/common_google_signin_btn_text_light_default"
                     android:padding="6dp"
                     android:textStyle="italic"
-                    android:layout_gravity="center"
-                    android:text="@string/tv_temp"
                     />
             </LinearLayout>
 

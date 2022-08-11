@@ -11,11 +11,11 @@ import com.unava.dia.weatherforecast.R
 import com.unava.dia.weatherforecast.data.model.future.Hour
 import com.unava.dia.weatherforecast.utils.GlideUtil
 import com.unava.dia.weatherforecast.utils.HourDiffUtil
+import com.unava.dia.weatherforecast.utils.getDateString
 import java.text.SimpleDateFormat
 import java.util.*
 
 class HourlyAdapter(private val response: MutableList<Hour>): RecyclerView.Adapter<HourlyAdapter.HourlyViewHolder>() {private val simpleDateFormat = SimpleDateFormat("dd MMMM yyyy, HH:mm:ss", Locale.ENGLISH)
-    private val sdf = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HourlyViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.hourly_item, parent, false)
@@ -33,7 +33,6 @@ class HourlyAdapter(private val response: MutableList<Hour>): RecyclerView.Adapt
         ("wind kph:" + item.wind_kph.toString()).also { holder.wind.text = it }
         ("humidity" + item.humidity.toString() + "% ").also { holder.humidity.text = it }
     }
-    private fun getDateString(time: Long) : String = sdf.format(time * 1000L)
 
     fun addWeather(newWeather: List<Hour>) {
         val wDiffUtil = HourDiffUtil(response, newWeather)

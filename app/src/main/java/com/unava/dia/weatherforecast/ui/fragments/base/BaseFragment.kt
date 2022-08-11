@@ -14,10 +14,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 abstract class BaseFragment(private val cf: Int) : Fragment() {
 
-    @Inject
-    lateinit var shared: WeatherSharedPreferences
-
-    abstract fun bindViewModel()
     abstract fun observeViewModel()
     abstract fun initUi()
 

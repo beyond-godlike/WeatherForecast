@@ -3,17 +3,20 @@ package com.unava.dia.weatherforecast.ui.fragments.base
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.unava.dia.weatherforecast.data.api.ApiInterface
+import com.unava.dia.weatherforecast.data.WeatherSharedPreferences
 import com.unava.dia.weatherforecast.data.model.curernt.CurrentWeatherResponse
 import com.unava.dia.weatherforecast.data.model.future.FutureWeatherResponse
 import com.unava.dia.weatherforecast.data.repository.WeatherRepository
 import com.unava.dia.weatherforecast.domain.useCases.GetCurrentWeatherUseCase
 import com.unava.dia.weatherforecast.domain.useCases.GetFutureWeatherUseCase
+import com.unava.dia.weatherforecast.utils.getDateString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -25,6 +28,7 @@ class SharedViewModel @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
     private val currentWeatherUseCase: GetCurrentWeatherUseCase,
     private val futureWeatherUseCase: GetFutureWeatherUseCase,
+    private val shared: WeatherSharedPreferences
 ) : ViewModel(), LifecycleObserver {
 
     var error: MutableLiveData<String> = MutableLiveData()
@@ -36,10 +40,18 @@ class SharedViewModel @Inject constructor(
         get() = parentJob + dispatcher
     private val scope = CoroutineScope(coroutineContext)
 
+    lateinit var pos: String
+
     var id: Long? = null
 
-    fun setId(currentId: Long) {
-        id = currentId
+    fun saveCity(ct: String) {
+        shared.saveCity(ct)
+    }
+
+    init {
+        id = shared.getId()
+        getCurrentWeather(shared.getCity())
+        getFutureWeather(shared.getCity(), 7)
     }
 
     fun getCurrentWeather(country: String) {
@@ -50,6 +62,7 @@ class SharedViewModel @Inject constructor(
                     val data = response.body()
                     if (data != null) {
                         currentWeather.postValue(data)
+                        setPos(data.location?.localtime_epoch!!)
                     } else {
                         error.postValue("Code404")
                     }
@@ -60,6 +73,7 @@ class SharedViewModel @Inject constructor(
                 error.postValue(e.localizedMessage)
                 currentWeather.postValue(id?.let { repository.getCurrentWeather(it) })
             }
+            parentJob.join()
         }
     }
 
@@ -81,5 +95,12 @@ class SharedViewModel @Inject constructor(
                 futureWeather.postValue(id?.let { repository.getFutureWeather(it) })
             }
         }
+    }
+
+    private fun setPos(time: Long) {
+        pos = getDateString(
+            time,
+            SimpleDateFormat("HH", Locale.ENGLISH)
+        )
     }
 }

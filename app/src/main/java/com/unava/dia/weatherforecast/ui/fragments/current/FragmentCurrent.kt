@@ -22,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class FragmentCurrent : BaseFragment(R.layout.fragment_current_fragment) {
 
-    private var ct: String = "London"
+    private var ct: String = CITY_DEFAULT
     private var btOk: Button? = null
 
     private var tvTemp: TextView? = null
@@ -42,9 +42,7 @@ class FragmentCurrent : BaseFragment(R.layout.fragment_current_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         this.initUi()
-        this.bindViewModel()
-        this.viewModel.setId(shared.getId())
-        this.viewModel.getCurrentWeather(shared.getCity())
+        this.observeViewModel()
     }
 
     override fun initUi() {
@@ -56,12 +54,11 @@ class FragmentCurrent : BaseFragment(R.layout.fragment_current_fragment) {
         etCity = requireActivity().findViewById(R.id.etCity)
         swTheme = requireActivity().findViewById(R.id.swTheme)
 
-        ct = shared.getCity()
         if (ct == "") ct = CITY_DEFAULT
 
         btOk?.setOnClickListener {
             ct = etCity?.text.toString()
-            shared.saveCity(ct)
+            viewModel.saveCity(ct)
             viewModel.getCurrentWeather(ct)
             viewModel.getFutureWeather(ct, 7)
         }
@@ -75,10 +72,6 @@ class FragmentCurrent : BaseFragment(R.layout.fragment_current_fragment) {
         }
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
-    }
-
-    override fun bindViewModel() {
-        this.observeViewModel()
     }
 
     override fun observeViewModel() {

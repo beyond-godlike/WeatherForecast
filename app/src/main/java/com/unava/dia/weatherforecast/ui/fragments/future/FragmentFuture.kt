@@ -22,8 +22,6 @@ class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
             defaultViewModelProviderFactory)
     }
 
-    private var city: String = CITY_DEFAULT
-
     private var rvMonth: RecyclerView? = null
     private var adapter: MounthAdapter? = null
 
@@ -33,14 +31,8 @@ class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
 
         this.initUi()
         this.setupRecyclerView()
-        this.bindViewModel()
-    }
-
-    override fun bindViewModel() {
-        viewModel.getFutureWeather(shared.getCity(), 7)
         this.observeViewModel()
     }
-
 
     override fun observeViewModel() {
         viewModel.error.observe(viewLifecycleOwner) {
@@ -55,8 +47,6 @@ class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
 
     override fun initUi() {
         rvMonth = requireActivity().findViewById(R.id.rvMonth)
-        city = shared.getCity()
-        if (city == "") city = CITY_DEFAULT
     }
 
     private fun setupRecyclerView() {
@@ -64,8 +54,6 @@ class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
         rvMonth?.addItemDecoration(
             MarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin))
         )
-        //rvMounth?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        //rvMounth.addOnItemTouchListener(RecyclerItemClickListener(requireContext(), this))
     }
 
     private fun updateView(response: FutureWeatherResponse) {
@@ -75,6 +63,7 @@ class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
             adapter = MounthAdapter(list!!)
             rvMonth?.adapter = adapter
         } else {
+            rvMonth?.adapter = adapter
             adapter?.addWeather(list!!)
         }
     }

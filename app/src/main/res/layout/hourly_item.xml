@@ -4,8 +4,7 @@
     android:layout_height="wrap_content"
     app:strokeWidth="1dp"
     app:cardCornerRadius="8dp"
-    app:shapeAppearance="@style/Theme.WeatherForecast"
-    android:background="@color/colorTransparent"
+    app:cardElevation="4dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
