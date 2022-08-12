@@ -1,4 +1,4 @@
-package com.unava.dia.weatherforecast.ui.fragments.hourly
+package com.unava.dia.weatherforecast.ui.hourly
 
 import android.view.LayoutInflater
 import android.view.View

@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.unava.dia.weatherforecast.ui.fragments.current.FragmentCurrent
 import com.unava.dia.weatherforecast.ui.fragments.future.FragmentFuture
-import com.unava.dia.weatherforecast.ui.fragments.hourly.HourlyFragment
 
 @Suppress("DEPRECATION")
 internal class MyAdapter(
@@ -22,9 +21,6 @@ internal class MyAdapter(
             }
             1 -> {
                 FragmentFuture()
-            }
-            2 -> {
-                HourlyFragment()
             }
             else -> getItem(position)
         }

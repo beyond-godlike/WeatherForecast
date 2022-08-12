@@ -24,7 +24,4 @@ abstract class BaseFragment(private val cf: Int) : Fragment() {
         return inflater.inflate(cf, container, false)
     }
 
-    fun showError(message: String, appContext: Context) {
-        Toast.makeText(appContext, message, Toast.LENGTH_SHORT).show()
-    }
 }

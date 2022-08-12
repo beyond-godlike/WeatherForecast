@@ -17,6 +17,7 @@ import com.unava.dia.weatherforecast.ui.fragments.base.SharedViewModel
 import com.unava.dia.weatherforecast.utils.Constants.CITY_DEFAULT
 import com.unava.dia.weatherforecast.utils.GlideUtil
 import com.unava.dia.weatherforecast.utils.obtainViewModel
+import com.unava.dia.weatherforecast.utils.showError
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

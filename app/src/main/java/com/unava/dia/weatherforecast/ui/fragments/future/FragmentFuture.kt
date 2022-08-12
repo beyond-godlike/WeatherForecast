@@ -1,5 +1,6 @@
 package com.unava.dia.weatherforecast.ui.fragments.future
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
@@ -8,13 +9,17 @@ import com.unava.dia.weatherforecast.R
 import com.unava.dia.weatherforecast.data.model.future.FutureWeatherResponse
 import com.unava.dia.weatherforecast.ui.fragments.base.BaseFragment
 import com.unava.dia.weatherforecast.ui.fragments.base.SharedViewModel
-import com.unava.dia.weatherforecast.utils.Constants.CITY_DEFAULT
+import com.unava.dia.weatherforecast.ui.hourly.HourlyActivity
+import com.unava.dia.weatherforecast.ui.main.MainActivity
 import com.unava.dia.weatherforecast.utils.MarginItemDecoration
+import com.unava.dia.weatherforecast.utils.RecyclerViewClickListener
 import com.unava.dia.weatherforecast.utils.obtainViewModel
+import com.unava.dia.weatherforecast.utils.showError
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
-class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
+class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment), RecyclerViewClickListener {
 
     private val viewModel: SharedViewModel by lazy {
         obtainViewModel(requireActivity(),
@@ -60,11 +65,19 @@ class FragmentFuture : BaseFragment(R.layout.fragment_future_fragment) {
         val list = response.forecast?.forecastday?.toMutableList()
         rvMonth?.visibility = View.VISIBLE
         if (adapter == null) {
-            adapter = MounthAdapter(list!!)
+            adapter = MounthAdapter(list!!, this)
             rvMonth?.adapter = adapter
         } else {
             rvMonth?.adapter = adapter
             adapter?.addWeather(list!!)
+        }
+    }
+
+    override fun onClick(view: View?, position: Int) {
+        activity?.let {
+            val intent = Intent(it, HourlyActivity::class.java)
+            intent.putExtra("day", position)
+            it.startActivity(intent)
         }
     }
 }

@@ -1,8 +1,10 @@
 package com.unava.dia.weatherforecast.utils
 
+import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -42,3 +44,8 @@ fun countRGB(avg: Float): Int {
 private fun fib(n: Int): Int {
     return if (n <= 1) n else fib(n - 1) + fib(n - 2)
 }
+
+fun showError(msg: String, context: Context) {
+    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+}
+

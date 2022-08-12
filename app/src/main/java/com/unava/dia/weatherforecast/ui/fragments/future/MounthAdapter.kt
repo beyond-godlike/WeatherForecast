@@ -13,20 +13,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.unava.dia.weatherforecast.R
 import com.unava.dia.weatherforecast.data.model.future.Forecastday
-import com.unava.dia.weatherforecast.utils.DayDiffUtil
-import com.unava.dia.weatherforecast.utils.GlideUtil
-import com.unava.dia.weatherforecast.utils.countRGB
-import com.unava.dia.weatherforecast.utils.countRGBStroke
+import com.unava.dia.weatherforecast.utils.*
 import kotlin.math.abs
 
 
-class MounthAdapter(private val response: MutableList<Forecastday>) :
-    RecyclerView.Adapter<MounthAdapter.CustomViewHolder>() {
+class MounthAdapter(
+    private val response: MutableList<Forecastday>,
+    private val listener: RecyclerViewClickListener
+    ) : RecyclerView.Adapter<MounthAdapter.CustomViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.mounth_item, parent, false)
         view.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT,
             RecyclerView.LayoutParams.WRAP_CONTENT)
-        return CustomViewHolder(view)
+        return CustomViewHolder(view, listener)
     }
 
     @SuppressLint("SetTextI18n")
@@ -64,11 +63,24 @@ class MounthAdapter(private val response: MutableList<Forecastday>) :
         diffResult.dispatchUpdatesTo(this)
     }
 
-    class CustomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class CustomViewHolder(
+        itemView: View,
+        listener: RecyclerViewClickListener
+    ) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        private val mListener = listener
+
         val date: TextView = itemView.findViewById(R.id.tvDate)
         val ivCondition: ImageView = itemView.findViewById(R.id.ivCond)
         val day: TextView = itemView.findViewById(R.id.tvDayTemp)
         val night: TextView = itemView.findViewById(R.id.tvNightTemp)
         val mc: MaterialCardView = itemView.findViewById(R.id.materialCard)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            mListener.onClick(v, bindingAdapterPosition)
+        }
     }
 }
